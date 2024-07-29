@@ -39,12 +39,8 @@ app.get('/', (req, res) => {
   res.send(`Bandit ate: ${lastMeal(lastDate)} at ${formatTime(lastDate)}`)
 })
 
-
-
-
 app.post('/', (req, res) => {
   fs.writeFile('./data.txt', `${new Date().toISOString()}\n`, {flush: true, flag: "a+"} , (err)=>{})
-  ////parse the file when reading to convert string back into a time object
   res.end()
 })
 
