@@ -1,9 +1,12 @@
 const express = require('express')
 const fs = require('fs')
+const cors = require('cors')
 
 
 const app = express()
 app.use(express.json())
+
+app.use(cors())
 
 const port = 8080
 
@@ -33,12 +36,14 @@ function formatTime(lastTime) {
   return lastTime.getHours() + ":" + lastTime.getMinutes()
 }
 
+//Keep get request
 app.get('/', (req, res) => {
   let arr = readFileLines('./data.txt');
-  let lastDate = new Date(arr[arr.length-2])
-  res.send(`Bandit ate: ${lastMeal(lastDate)} at ${formatTime(lastDate)}`)
+  res.json({
+    Dates: arr})
 })
 
+//keep post request
 app.post('/', (req, res) => {
   fs.writeFile('./data.txt', `${new Date().toISOString()}\n`, {flush: true, flag: "a+"} , (err)=>{})
   res.end()
