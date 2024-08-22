@@ -1,11 +1,15 @@
 import axios from 'axios';
+const server = 'http://localhost:8080/';
 
 function GetDates() {
-    return axios('http://localhost:8080/')
+    return axios(`${server}`)
     .then(response => {
-        console.log(response.data.Dates)
-        return (response.data.Dates)
+        return (response.data.dates.map(date => new Date(date)));
     })
 }
 
-export default GetDates;
+function AddDate(time) {
+    return axios.post(`${server}`, {date:time})
+}
+
+export {GetDates, AddDate};

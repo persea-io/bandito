@@ -1,7 +1,7 @@
 import logo from './bandit.png';
 import './App.css';
 import ButtonComponent from './button';
-import GetDates from './api.js';
+import {GetDates, AddDate} from './api.js';
 import {useState} from 'react'
 import LogComponent from './log.js';
 
@@ -36,36 +36,35 @@ function App() {
 
   //event handler for when feed button is clicked
   const handleFeedClick = () => {
-    GetDates().then(
-      allDates => {
-        let lastDate = new Date((allDates[allDates.length-2]).trim())
-        setText(formatTime(lastDate));
-        setState(prevState => {
-          if (canFeed(lastDate)) {
-            canClick = true;
-            return "Feed me!"
+    AddDate(new Date()).then(() => {
+      GetDates().then(
+        allDates => {
+          if (allDates?.length >=1) {
+            const lastDate = allDates[allDates.length-1];
+            setText(formatTime(lastDate));
+            setState(prevState => {
+              if (canFeed(lastDate)) {
+                canClick = true;
+                return "Feed me!"
+              }
+              else {
+                canClick = false;
+                return "Feed me again in a couple hours."
+              }
+            });
           }
-          else {
-            canClick = false;
-            return "Feed me again in a couple hours."
-          }
-        });
-      }
-    );
+        }
+      );
+    }
+  )
   }
 
   const handleLogClick = () => {
 
     GetDates().then( 
       (allDates) => {
-        //new array that holds date objects 
-        let dateObjects = [];
-        for (let index = 0; index < allDates.length; ++index) {
-          dateObjects[index] = new Date((allDates[index]).trim());
-        }
-        //formats objects and updates state of timeLog
-        setTimeLog(dateObjects.map(formatTime));
-        console.log(dateObjects.map(formatTime));
+        setTimeLog(allDates.map(formatTime));
+        console.log(allDates.map(formatTime));
       }
     )
   }
@@ -80,7 +79,6 @@ function App() {
         <ButtonComponent clickHandler={handleLogClick} text="View Log"/>
         <LogComponent times={timeLog}/>
       </header>
-
     </div>
   );
 }
