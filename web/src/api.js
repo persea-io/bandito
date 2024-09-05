@@ -1,15 +1,21 @@
 import axios from 'axios';
-const server = 'http://localhost:8080/';
+
+const server = 'http://localhost:8080';
 
 function GetDates() {
-    return axios(`${server}`)
+
+    const petId = 1; // TODO
+
+    return axios(`${server}/${petId}/events`)
     .then(response => {
-        return (response.data.dates.map(date => new Date(date)));
+        return (response.data.map(event => new Date(event.time)));
     })
 }
 
 function AddDate(time) {
-    return axios.post(`${server}`, {date:time})
+    const petId = 1; // TODO
+
+    return axios.post(`${server}/${petId}/events`, {})
 }
 
 export {GetDates, AddDate};
