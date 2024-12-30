@@ -1,32 +1,57 @@
 const express = require('express')
 const cors = require('cors')
-const {connect, getEvents, createEvent, getEventsForPet} = require("./db");
+const db = require('./db')
 
-connect().then(dbConnection => {
-  const app = express()
-  app.use(express.json())
+const dbConnection = db.connect()
 
-  app.use(cors())
+const app = express()
+app.use(express.json())
 
-  const port = 8080
+app.use(cors())
 
-  app.get('/:petId/events', (req, res) => {
-    getEventsForPet(dbConnection, req.params.petId).then(events => {
-      res.json(events)
-    })
-  })
+const port = 8080
 
-  app.post('/:petId/events', (req, res) => {
-    createEvent(dbConnection, {petId: req.params.petId}).then(event =>
-      res.json(event)
+app.post('/owners/:ownerId/pets', (req, res) => {
+    db.addPet(dbConnection, {ownerId: req.params.ownerId, ...req.body}).then(event =>
+        res.json(event)
     )
-  })
+})
 
-  app.listen(port)
+app.get('/pets/:petId', (req, res) => {
+    db.getPetById(dbConnection, req.params.petId, (req.query.events !== undefined))
+        .then(pet => {
+            if (pet) {
+                res.json(pet);
+            } else {
+                res.status(404).send();
+            }
+        })
+})
 
-  console.log('Server started on port: ' + port)
+app.get('/pets/:petId/events', (req, res) => {
+    db.getEventsForPet(dbConnection, req.params.petId).then(events => {
+        res.json(events)
+    })
+})
 
-}).catch(err => console.log(err))
+app.post('/pets/:petId/events', (req, res) => {
+    db.addEvent(dbConnection, {petId: req.params.petId, ...req.body}).then(event =>
+        res.json(event)
+    )
+})
 
+app.get('/events/:eventId', (req, res) =>
+    db.getEventById(dbConnection, req.params.eventId).then(event => {
+        if (event) {
+            res.json(event)
+        } else {
+            res.status(404).send()
+        }
+    })
+)
+
+app.listen(port)
+
+console.log('Server started on port: ' + port)
 
 
