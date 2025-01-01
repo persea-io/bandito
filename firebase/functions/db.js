@@ -1,6 +1,16 @@
 const {logger} = require("firebase-functions")
 const { v4: uuid } = require('uuid')
 
+const evalSnapshot = (snapshot) => {
+    if (snapshot.empty) {
+        return []
+    }
+
+    const result = []
+    snapshot.forEach(doc =>  result.push(doc.data()))
+    return result
+}
+
 const addPet = async (db, pet) => {
     const id = uuid()
     const docRef = db.collection('pets').doc(id)
@@ -8,6 +18,12 @@ const addPet = async (db, pet) => {
     pet.added = new Date().getTime()
     await docRef.set(pet)
     return pet
+}
+
+const getPetsForOwner = async (db, ownerId) => {
+    const eventsRef = db.collection('pets')
+    const snapshot = await eventsRef.where('ownerId', '==', ownerId).get()
+    return evalSnapshot(snapshot)
 }
 
 const getPetById = async (db, petId, includeEvents) => {
@@ -26,13 +42,7 @@ const getPetById = async (db, petId, includeEvents) => {
 const getEventsForPet = async (db, petId) => {
     const eventsRef = db.collection('events')
     const snapshot = await eventsRef.where('petId', '==', petId).get()
-    if (snapshot.empty) {
-        return []
-    }
-
-    const result = []
-    snapshot.forEach(doc =>  result.push(doc.data()))
-    return result
+    return evalSnapshot(snapshot)
 }
 
 const getEventById = async (db, eventId) => {
@@ -52,6 +62,7 @@ const addEvent = async (db, event) => {
 
 module.exports = {
     addPet,
+    getPetsForOwner,
     getPetById,
     getEventsForPet,
     getEventById,

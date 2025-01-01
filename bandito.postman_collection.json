@@ -21,17 +21,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/pets/:petId/events/",
-					"protocol": "http",
+					"raw": "{{api}}/pets/:petId/events",
 					"host": [
-						"localhost"
+						"{{api}}"
 					],
-					"port": "8080",
 					"path": [
 						"pets",
 						":petId",
-						"events",
-						""
+						"events"
 					],
 					"query": [
 						{
@@ -43,7 +40,7 @@
 					"variable": [
 						{
 							"key": "petId",
-							"value": ""
+							"value": "70020e56-9bfc-480c-9d6c-11e6d3190b7e"
 						}
 					]
 				}
@@ -65,12 +62,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/owners/:ownerId/pets",
-					"protocol": "http",
+					"raw": "{{api}}/owners/:ownerId/pets",
 					"host": [
-						"localhost"
+						"{{api}}"
 					],
-					"port": "8080",
 					"path": [
 						"owners",
 						":ownerId",
@@ -103,7 +98,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"type\": \"feed\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -111,12 +106,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/pets/:petId/events/",
-					"protocol": "http",
+					"raw": "{{api}}/pets/:petId/events/",
 					"host": [
-						"localhost"
+						"{{api}}"
 					],
-					"port": "8080",
 					"path": [
 						"pets",
 						":petId",
@@ -133,7 +126,7 @@
 					"variable": [
 						{
 							"key": "petId",
-							"value": ""
+							"value": "70020e56-9bfc-480c-9d6c-11e6d3190b7e"
 						}
 					]
 				}
@@ -150,7 +143,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"type\": \"feed\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -158,12 +151,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/events/:eventId",
-					"protocol": "http",
+					"raw": "{{api}}/events/:eventId",
 					"host": [
-						"localhost"
+						"{{api}}"
 					],
-					"port": "8080",
 					"path": [
 						"events",
 						":eventId"
@@ -187,43 +178,61 @@
 		},
 		{
 			"name": "Pet by id",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"type\": \"feed\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:8080/pets/:petsId",
-					"protocol": "http",
+					"raw": "{{api}}/pets/:petId",
 					"host": [
-						"localhost"
+						"{{api}}"
 					],
-					"port": "8080",
 					"path": [
 						"pets",
-						":petsId"
+						":petId"
 					],
 					"query": [
 						{
-							"key": "",
-							"value": null,
+							"key": "events",
+							"value": "",
 							"disabled": true
 						}
 					],
 					"variable": [
 						{
-							"key": "petsId",
-							"value": ""
+							"key": "petId",
+							"value": "852fa207-aff5-4d0c-920e-7dc695cc11f5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pets for owner",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api}}/owners/:ownerId/pets",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"owners",
+						":ownerId",
+						"pets"
+					],
+					"query": [
+						{
+							"key": "events",
+							"value": "",
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "ownerId",
+							"value": "562354"
 						}
 					]
 				}

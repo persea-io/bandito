@@ -2,7 +2,7 @@
 const {logger} = require("firebase-functions")
 const {onRequest} = require("firebase-functions/v2/https")
 
-const {initializeApp, cert} = require("firebase-admin/app")
+const {initializeApp} = require("firebase-admin/app")
 const {getFirestore} = require("firebase-admin/firestore")
 
 const express = require('express')
@@ -27,9 +27,15 @@ main.use(bodyParser.json());
 exports.webApi = onRequest(main)
 
 app.post('/owners/:ownerId/pets', (req, res) => {
-    db.addPet(dbConnection, {ownerId: req.params.ownerId, ...req.body}).then(event =>
-        res.json(event)
+    db.addPet(dbConnection, {ownerId: req.params.ownerId, ...req.body}).then(pet =>
+        res.json(pet)
     )
+})
+
+app.get('/owners/:ownerId/pets', (req, res) => {
+    db.getPetsForOwner(dbConnection, req.params.ownerId).then(pets => {
+        res.json(pets)
+    })
 })
 
 app.get('/pets/:petId', (req, res) => {
