@@ -1,17 +1,5 @@
-const { initializeApp, applicationDefault, cert } = require('firebase-admin/app')
-const { getFirestore, Timestamp, FieldValue, Filter } = require('firebase-admin/firestore')
+const {logger} = require("firebase-functions")
 const { v4: uuid } = require('uuid')
-
-
-const connect = () => {
-    const serviceAccount = require('/home/dave/bandito-446302-firebase-adminsdk-1xjkv-55cfa5f58e.json')
-
-    initializeApp({
-        credential: cert(serviceAccount)
-    })
-
-    return getFirestore()
-}
 
 const addPet = async (db, pet) => {
     const id = uuid()
@@ -63,7 +51,6 @@ const addEvent = async (db, event) => {
 }
 
 module.exports = {
-    connect,
     addPet,
     getPetById,
     getEventsForPet,

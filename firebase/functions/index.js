@@ -1,15 +1,30 @@
+
+const {logger} = require("firebase-functions")
+const {onRequest} = require("firebase-functions/v2/https")
+
+const {initializeApp, cert} = require("firebase-admin/app")
+const {getFirestore} = require("firebase-admin/firestore")
+
 const express = require('express')
 const cors = require('cors')
-const db = require('./db')
+const bodyParser = require('body-parser')
 
-const dbConnection = db.connect()
+const db = require("./db")
+
+initializeApp()
+
+const dbConnection = getFirestore()
 
 const app = express()
 app.use(express.json())
-
 app.use(cors())
 
-const port = 8080
+const main = express()
+
+main.use('/api/v1', app)
+main.use(bodyParser.json());
+
+exports.webApi = onRequest(main)
 
 app.post('/owners/:ownerId/pets', (req, res) => {
     db.addPet(dbConnection, {ownerId: req.params.ownerId, ...req.body}).then(event =>
@@ -21,9 +36,9 @@ app.get('/pets/:petId', (req, res) => {
     db.getPetById(dbConnection, req.params.petId, (req.query.events !== undefined))
         .then(pet => {
             if (pet) {
-                res.json(pet);
+                res.json(pet)
             } else {
-                res.status(404).send();
+                res.status(404).send()
             }
         })
 })
@@ -49,9 +64,3 @@ app.get('/events/:eventId', (req, res) =>
         }
     })
 )
-
-app.listen(port)
-
-console.log('Server started on port: ' + port)
-
-
