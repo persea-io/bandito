@@ -5,22 +5,24 @@ import {AppComponent} from './app.component';
 import {AngularFireModule} from "@angular/fire/compat";
 import {AngularFireAuthModule} from "@angular/fire/compat/auth";
 import {environment} from "../environments/environment";
-import {HomeComponent} from './home/home.component';
-import {SignInComponent} from './sign-in/sign-in.component';
 import {ProfileComponent} from './profile/profile.component';
+import {LoginComponent} from '../login/login.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    SignInComponent,
+    LoginComponent,
     ProfileComponent
   ],
   imports: [
     AngularFireAuthModule,
     AngularFireModule.initializeApp(environment.firebase),
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]
