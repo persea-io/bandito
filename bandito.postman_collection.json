@@ -54,7 +54,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"Loomis\",\n    \"type\": \"Dog\",\n    \"birthday\": \"2014-01-20\"\n}",
+					"raw": "{\n    \"name\": \"Bandit\",\n    \"type\": \"Dog\",\n    \"birthday\": \"2022-01-20\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -238,6 +238,88 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Auth Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseData=pm.response.json();",
+							"pm.environment.set(\"bandito_auth_token\", responseData.idToken);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"dave@bandito.com\",\n    \"password\": \"123456\",\n    \"returnSecureToken\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{firebase_server}}/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{firebase_api_key}}",
+					"host": [
+						"{{firebase_server}}"
+					],
+					"path": [
+						"identitytoolkit.googleapis.com",
+						"v1",
+						"accounts:signInWithPassword"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{firebase_api_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{bandito_auth_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }

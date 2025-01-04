@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit {
     public authService: AuthService,
     private titleService: Title)  {}
 
-  loginError: string | undefined
+  loginError= false
 
   loginForm = new FormGroup({
     username: new FormControl(null, [Validators.required]),
@@ -22,12 +22,18 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle("Login")
+
+    this.loginForm.valueChanges.subscribe(change => {
+      this.loginError = false
+    })
   }
 
   login() {
     this.authService.authenticate(this.username?.getRawValue(), this.password?.getRawValue())
-      .catch((error) => {
-        this.loginError = 'Invalid Credentials. Please check your username and password.'
+      .then(() => {
+        this.loginError = false
+    }).catch((error) => {
+        this.loginError = true
       });
   }
 

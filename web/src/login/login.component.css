@@ -11,5 +11,6 @@ h1 {
 .login-error {
   color: darkred;
   font-weight: bold;
+  margin-top: 1em;
   margin-bottom: 1em;
 }

@@ -5,7 +5,6 @@ const evalSnapshot = (snapshot) => {
     if (snapshot.empty) {
         return []
     }
-
     const result = []
     snapshot.forEach(doc =>  result.push(doc.data()))
     return result
@@ -22,26 +21,30 @@ const addPet = async (db, pet) => {
 
 const getPetsForOwner = async (db, ownerId) => {
     const eventsRef = db.collection('pets')
-    const snapshot = await eventsRef.where('ownerId', '==', ownerId).get()
+    const snapshot = await eventsRef.orderBy('name').where('ownerId', '==', ownerId).get()
     return evalSnapshot(snapshot)
 }
 
 const getPetById = async (db, petId, includeEvents) => {
-    const eventRef = db.collection('pets').doc(petId)
-    const doc = await eventRef.get()
+    const petRef = db.collection('pets').doc(petId)
+    const doc = await petRef.get()
     if (!doc.exists) {
         return null
     }
     const pet = doc.data()
     if (includeEvents) {
-        pet.events = await getEventsForPet(db, petId)
+        pet.events = await getEventsForPet(db, petId, 10)
     }
     return pet
 }
 
-const getEventsForPet = async (db, petId) => {
+const getEventsForPet = async (db, petId, count) => {
+    if (!count) {
+        count = 100;
+    }
     const eventsRef = db.collection('events')
-    const snapshot = await eventsRef.where('petId', '==', petId).get()
+    const snapshot = await eventsRef.orderBy('timestamp', 'desc').limit(count)
+        .where('petId', '==', petId).get()
     return evalSnapshot(snapshot)
 }
 
