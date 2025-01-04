@@ -1,4 +1,6 @@
 export const environment = {
   apiUrl: '',
-  firebase: {}
+  firebase: {
+  },
+  useEmulators: false
 };

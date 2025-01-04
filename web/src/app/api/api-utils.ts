@@ -6,7 +6,7 @@ import {AuthService} from '../auth.serivce';
 import {inject} from '@angular/core';
 
 const domainServiceRoot = () => {
-  return `${environment.apiUrl}/`
+  return `${environment.apiUrl}`
 }
 
 const handleError = (error: HttpErrorResponse): Observable<any> => {

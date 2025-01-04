@@ -3,7 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {AngularFireModule} from "@angular/fire/compat";
-import {AngularFireAuthModule} from "@angular/fire/compat/auth";
+import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from "@angular/fire/compat/auth";
 import {environment} from "../environments/environment";
 import {ProfileComponent} from './profile/profile.component';
 import {LoginComponent} from '../login/login.component';
@@ -26,9 +26,13 @@ import {authInterceptor} from './api/api-utils';
     ReactiveFormsModule,
     NgbModule
   ],
-  providers: [provideHttpClient(
-    withInterceptors([authInterceptor])
-  )],
+  providers: [
+    provideHttpClient(withInterceptors([authInterceptor])),
+    {
+      provide: USE_AUTH_EMULATOR,
+      useValue: environment.useEmulators ? ['http://localhost:9099'] : undefined
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

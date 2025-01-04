@@ -41,27 +41,24 @@ export class AuthService {
     this.router.navigate(['/login']).then();
   }
 
-  authenticate(email: string, password: string) {
-    return this.firebaseAuth
-      .signInWithEmailAndPassword(email, password)
-      .then(userCredential => {
-        if (userCredential?.user) {
-          userCredential.user.getIdToken(false)
-            .then(rawToken => {
-              if (!rawToken) {
-                // Logged out
-                this.clearState();
-                return;
-              }
-              this.assignUserFromToken(rawToken);
-              this.router.navigate(['/profile'], {replaceUrl: true}).then();
-            })
-            .catch(() => {
-              // Error retrieving token, should not happen
-              this.clearState();
-            })
+  async authenticate(email: string, password: string) {
+    const userCredential = await this.firebaseAuth
+      .signInWithEmailAndPassword(email, password);
+    if (userCredential?.user) {
+      try {
+        const rawToken = await userCredential.user.getIdToken(false)
+        if (!rawToken) {
+          // Logged out
+          this.clearState();
+          return;
         }
-      })
+        this.assignUserFromToken(rawToken);
+        this.router.navigate(['/profile'], {replaceUrl: true}).then();
+      } catch(e) {
+        // Error retrieving token, should not happen
+        this.clearState();
+      }
+    }
   }
 
   public canActivate(
@@ -93,12 +90,12 @@ export class AuthService {
   }
 
   private assignUserFromToken(rawToken: string) {
-      const decodedToken: any = jwtDecode(rawToken)
-      const user = {
-        token: rawToken,
-        id: decodedToken['sub'],
-        username: decodedToken['email'],
-      }
-      sessionStorage.setItem(this.userKey, JSON.stringify(user));
+    const decodedToken: any = jwtDecode(rawToken)
+    const user = {
+      token: rawToken,
+      id: decodedToken['sub'],
+      username: decodedToken['email'],
     }
+    sessionStorage.setItem(this.userKey, JSON.stringify(user));
+  }
 }
