@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {Title} from "@angular/platform-browser";
-import {AuthService} from '../app/auth.serivce';
+import {AuthService} from '../auth.serivce';
 
 @Component({
   selector: 'login',
@@ -9,9 +8,7 @@ import {AuthService} from '../app/auth.serivce';
   styleUrls: ['login.component.css']
 })
 export class LoginComponent implements OnInit {
-  constructor(
-    public authService: AuthService,
-    private titleService: Title)  {}
+  constructor(private readonly authService: AuthService)  {}
 
   loginError= false
 
@@ -21,8 +18,6 @@ export class LoginComponent implements OnInit {
   })
 
   ngOnInit(): void {
-    this.titleService.setTitle("Login")
-
     this.loginForm.valueChanges.subscribe(change => {
       this.loginError = false
     })
@@ -38,7 +33,5 @@ export class LoginComponent implements OnInit {
   }
 
   get username() { return this.loginForm.get('username'); }
-
   get password() { return this.loginForm.get('password'); }
-
 }

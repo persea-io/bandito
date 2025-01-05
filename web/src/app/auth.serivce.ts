@@ -53,7 +53,7 @@ export class AuthService {
           return;
         }
         this.assignUserFromToken(rawToken);
-        this.router.navigate(['/profile'], {replaceUrl: true}).then();
+        this.router.navigate([''], {replaceUrl: true}).then();
       } catch(e) {
         // Error retrieving token, should not happen
         this.clearState();

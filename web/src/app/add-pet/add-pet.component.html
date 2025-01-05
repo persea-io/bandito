@@ -1,0 +1,64 @@
+<div class="d-flex justify-content-center">
+  <div class="w-50">
+    <h1>Let’s add your pet!</h1>
+    <form [formGroup]="addPetForm" autocomplete="off" spellcheck="false" >
+      <div class="row mb-3 justify-content-center">
+        <label for="name" class="col-sm-4 col-form-label">Pet's Name</label>
+        <div class="col-sm-5">
+          <input class="form-control" id="name" formControlName="name">
+        </div>
+      </div>
+      <div class="row mb-3 justify-content-center">
+        <label for="type" class="col-sm-4 col-form-label">Type</label>
+        <div class="col-sm-5">
+          <select class="form-select" id="type" aria-label="Default select example">
+            <option selected></option>
+            <option value="1">Dog</option>
+            <option value="2">Cat</option>
+            <option value="3">Other</option>
+          </select>
+        </div>
+      </div>
+
+      @for (control of addPetForm.controls.feedTimes.controls; track control; let index=$index) {
+        <div class="row mb-1 justify-content-center">
+          <label for="feedingTime" class="col-sm-4 col-form-label">Feeding Time</label>
+          <div class="col-sm-5">
+            <ngb-timepicker [formControl]="control" required id="feedingTime" [minuteStep]="15" [meridian]="true"/>
+          </div>
+        </div>
+      }
+      @if (timeValidationError) {
+        <div class="d-flex mb-4 small form-text text-danger justify-content-end">
+          {{timeValidationError}}
+        </div>
+      }
+
+      <div class="d-flex mb-4 justify-content-end">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-5">
+          @if(!twoFeedingTimes) {
+            <button class="btn btn-outline-secondary btn-sm"
+                    (click)="addFeedTime()">
+              Add Another Feeding Time
+            </button>
+          } @else {
+            <button class="btn btn-outline-secondary btn-sm"
+                    (click)="removeFeedTime()">
+              Remove Second Feeding Time
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="row mb-3 d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary"
+                (click)="submit()"
+                [disabled]="addPetForm.invalid">
+          Add Pet
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>

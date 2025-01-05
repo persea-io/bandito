@@ -18,7 +18,7 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "bandito",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",

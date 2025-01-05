@@ -5,18 +5,22 @@ import {AppComponent} from './app.component';
 import {AngularFireModule} from "@angular/fire/compat";
 import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from "@angular/fire/compat/auth";
 import {environment} from "../environments/environment";
-import {ProfileComponent} from './profile/profile.component';
-import {LoginComponent} from '../login/login.component';
+import {LoginComponent} from './login/login.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModule, NgbTimepickerModule} from '@ng-bootstrap/ng-bootstrap';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {authInterceptor} from './api/api-utils';
+import {HomeComponent} from './home/home.component';
+import {AddPetComponent} from './add-pet/add-pet.component';
+import {ManagePetComponent} from './manage-pet/manage-pet.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    ProfileComponent
+    HomeComponent,
+    AddPetComponent,
+    ManagePetComponent
   ],
   imports: [
     AngularFireAuthModule,
@@ -24,7 +28,8 @@ import {authInterceptor} from './api/api-utils';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
+    NgbTimepickerModule
   ],
   providers: [
     provideHttpClient(withInterceptors([authInterceptor])),
