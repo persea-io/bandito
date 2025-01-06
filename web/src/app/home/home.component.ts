@@ -11,18 +11,27 @@ import {PetService} from '../pet.service';
 })
 export class HomeComponent implements OnInit {
 
-  protected pet: Pet | undefined
-
   constructor(
     public readonly authService: AuthService,
     public readonly petService: PetService,
     private readonly router: Router)  {}
 
+  navToPetPage(pet: Pet) {
+    this.router.navigate(['/pet', pet.id]).then()
+  }
+
   ngOnInit(): void {
     if (this.authService.user) {
-      this.petService.getPetsForCurrentUser().subscribe(pets => {
-        this.pet = pets.length > 0 ? pets[0] : undefined
+      this.petService.getOnePetForCurrentUser().subscribe(pet => {
+        if (pet) {
+          this.navToPetPage(pet)
+        }
       })
     }
+  }
+
+  petAdded(pet: Pet) {
+    this.petService.addPetForCurrentUser(pet)
+      .subscribe(pet => this.navToPetPage(pet))
   }
 }

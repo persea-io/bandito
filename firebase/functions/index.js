@@ -128,7 +128,7 @@ app.post('/pets/:petId/events', async (req, res) => {
 app.get('/events/:eventId', async (req, res) => {
     const event = await db.getEventById(dbConnection, req.params.eventId)
     if (event) {
-        // Check that this event belongs to a pet owned by this owner
+        // Check that this event belongs to a pet owned by this pet
         try {
             await getPetById(dbConnection, event.petId, userId(req), null)
             res.json(event)

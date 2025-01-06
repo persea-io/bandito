@@ -1,19 +1,15 @@
-@if (pet) {
-  <bandito-manage-pet [pet]=pet></bandito-manage-pet>
-} @else {
-  @if(!authService.user) {
-    <div class="d-flex justify-content-center">
-      <div class="w-50 p-3">
-        <h1>Welcome to Bandito!</h1>
-        <div class="d-flex flex-column">
+@if(!authService.user) {
+  <div class="d-flex justify-content-center">
+    <div class="w-50 p-3">
+      <h1>Welcome to Bandito!</h1>
+      <div class="d-flex flex-column">
 
-          <a class="btn btn-primary mb-3" href="/login" role="button">Login</a>
-          <a class="btn btn-primary" href="/signup" role="button">Signup</a>
-        </div>
+        <a class="btn btn-primary mb-3" href="/login" role="button">Login</a>
+        <a class="btn btn-primary" href="/signup" role="button">Signup</a>
       </div>
     </div>
-  }
-  @else {
-    <bandito-add-pet (onNewPet)="pet = $event"></bandito-add-pet>
-  }
+  </div>
+}
+@else {
+  <bandito-edit-pet (onPetUpdated)="petAdded($event)"></bandito-edit-pet>
 }

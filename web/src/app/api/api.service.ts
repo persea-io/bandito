@@ -3,16 +3,23 @@ import {HttpClient} from '@angular/common/http';
 import {domainServiceRoot, handleError} from './api-utils';
 import {catchError, Observable} from 'rxjs';
 
-export interface FeedTime {
+export interface Time {
   hour: number,
   minute: number
 }
 
+export interface PetEvent {
+  timestamp: number,
+  type: string
+}
+
 export interface Pet {
+  id?: string,
   name: string,
   type?: string | null | undefined,
   birthday?: string,
-  feedTimes: FeedTime[]
+  feedTimes: Time[],
+  events?: PetEvent[]
 }
 
 @Injectable({
@@ -31,6 +38,16 @@ export class ApiService {
 
   addPet(ownerId: string, pet: Pet): Observable<Pet> {
     return this.http.post<Pet>(`${this.baseUrl}/owners/${ownerId}/pets`, pet)
+      .pipe(catchError(handleError))
+  }
+
+  getPet(petId: string, events: boolean = false) {
+    return this.http.get<Pet>(`${this.baseUrl}/pets/${petId}?${events ? 'events' : ''}`)
+      .pipe(catchError(handleError))
+  }
+
+  getEventsForPet(petId: string): Observable<PetEvent[]> {
+    return this.http.get<PetEvent[]>(`${this.baseUrl}/${petId}/events`)
       .pipe(catchError(handleError))
   }
 }

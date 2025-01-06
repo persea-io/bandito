@@ -11,16 +11,16 @@ import {NgbModule, NgbTimepickerModule} from '@ng-bootstrap/ng-bootstrap';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {authInterceptor} from './api/api-utils';
 import {HomeComponent} from './home/home.component';
-import {AddPetComponent} from './add-pet/add-pet.component';
-import {ManagePetComponent} from './manage-pet/manage-pet.component';
+import {EditPetComponent} from './edit-pet/edit-pet.component';
+import {PetComponent} from './pet/pet.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     HomeComponent,
-    AddPetComponent,
-    ManagePetComponent
+    EditPetComponent,
+    PetComponent
   ],
   imports: [
     AngularFireAuthModule,
@@ -40,4 +40,5 @@ import {ManagePetComponent} from './manage-pet/manage-pet.component';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

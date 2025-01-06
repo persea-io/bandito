@@ -6,13 +6,13 @@ import {Pet} from '../api/api.service';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'bandito-add-pet',
-  templateUrl: './add-pet.component.html',
-  styleUrl: './add-pet.component.css'
+  selector: 'bandito-edit-pet',
+  templateUrl: './edit-pet.component.html',
+  styleUrl: './edit-pet.component.css'
 })
-export class AddPetComponent {
+export class EditPetComponent {
 
-  onNewPet = output<Pet>()
+  onPetUpdated = output<Pet>()
 
   twoFeedingTimes = false
   timeValidationError: string | null = null;
@@ -64,7 +64,6 @@ export class AddPetComponent {
         return {hour: ft!.hour, minute: ft!.minute}
       })
     }
-    this.petService.addPetForCurrentUser(pet)
-      .subscribe(pet => this.onNewPet.emit(pet))
+    this.onPetUpdated.emit(pet)
   }
 }
