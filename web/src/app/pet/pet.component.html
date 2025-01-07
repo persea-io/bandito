@@ -1,40 +1,42 @@
 <div class="d-flex justify-content-center">
-  <div class="w-75">
-    <h1>{{pet?.name}}</h1>
+  @if (pet) {
+    <div class="w-75">
+      <h1>{{pet?.name}}</h1>
 
-    @if (lastFeeding) {
-      <p class="justify-content-center text-center mb-3">
-        <span>Last feeding {{lastFeeding | date:'shortTime'}}</span>
-        @if (isYesterday(lastFeeding)) {
-          <span>&nbsp;Yesterday</span>
-        }
-      </p>
-    }
+      @if (lastFeeding) {
+        <p class="justify-content-center text-center mb-3">
+          <span>Last feeding {{lastFeeding | date:'shortTime'}}</span>
+          @if (isYesterday(lastFeeding)) {
+            <span>&nbsp;Yesterday</span>
+          }
+        </p>
+      }
 
-    @if(nextFeeding?.missedFeedingTime) {
-      <p class="justify-content-center text-center mb-3">
-        Feeding time was {{formatTime(nextFeeding?.missedFeedingTime)}}
-      </p>
-      <p class="justify-content-center text-center mb-3 late">
-        Time to feed!
-      </p>
-    } @else {
-      <p class="justify-content-center text-center mb-3 fw-bold"  >
-        <span>Next feeding is {{formatTime(nextFeeding?.nextFeedingTime)}}</span>
-        @if(nextFeeding?.nextIsTomorrow) {
-          <span>&nbsp;Tomorrow</span>
-        } @else {
-          <div class="justify-content-center text-center mb-3">
-            About {{durationBefore(nextFeeding?.nextFeedingTime)}}
-          </div>
-        }
-      </p>
-    }
-    <div class="justify-content-center text-center">
-      <button class="btn btn-primary btn-lg"
-              (click)="feed()">
-        Feed {{pet?.name}}
-      </button>
+      @if(nextFeeding?.missedFeedingTime) {
+        <p class="justify-content-center text-center mb-3">
+          Feeding time was {{formatTime(nextFeeding?.missedFeedingTime)}}
+        </p>
+        <p class="justify-content-center text-center mb-3 late">
+          Time to feed!
+        </p>
+      } @else {
+        <p class="justify-content-center text-center mb-3 fw-bold"  >
+          <span>Next feeding is {{formatTime(nextFeeding?.nextFeedingTime)}}</span>
+          @if(nextFeeding?.nextIsTomorrow) {
+            <span>&nbsp;Tomorrow</span>
+          } @else {
+            <div class="justify-content-center text-center mb-3">
+              About {{durationBefore(nextFeeding?.nextFeedingTime)}}
+            </div>
+          }
+        </p>
+      }
+      <div class="justify-content-center text-center">
+        <button class="btn btn-primary btn-lg"
+                (click)="feed()">
+          Feed {{pet?.name}}
+        </button>
+      </div>
     </div>
-  </div>
+  }
 </div>

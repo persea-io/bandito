@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Pet, Time} from '../api/api.service';
 import {NextFeeding, PetService} from '../pet.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {retry, Subject, switchMap, takeUntil, timer} from 'rxjs';
+import {Subject, switchMap, takeUntil, timer} from 'rxjs';
 import {isYesterday} from 'date-fns';
 
 
@@ -33,7 +33,6 @@ export class PetComponent implements OnInit, OnDestroy {
     if (petId) {
       timer(0, this.pollIntervalMillis)
         .pipe(switchMap(() => this.petService.getPet(petId, true)),
-          retry(),
           takeUntil(this.stopPolling))
         .subscribe(pet => pet && this.updatePet(pet))
     }
