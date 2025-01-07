@@ -50,4 +50,9 @@ export class ApiService {
     return this.http.get<PetEvent[]>(`${this.baseUrl}/${petId}/events`)
       .pipe(catchError(handleError))
   }
+
+  addEventForPet(petId: string, event: PetEvent) {
+    return this.http.post<PetEvent>(`${this.baseUrl}/pets/${petId}/events`, event)
+      .pipe(catchError(handleError))
+  }
 }
