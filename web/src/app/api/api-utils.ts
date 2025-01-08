@@ -1,5 +1,5 @@
 import {HttpErrorResponse, HttpHandlerFn, HttpRequest} from "@angular/common/http";
-import {Observable, throwError} from "rxjs";
+import {from, lastValueFrom, Observable, throwError} from "rxjs";
 
 import {environment} from '../../environments/environment';
 import {AuthService} from '../auth.serivce';
@@ -14,16 +14,23 @@ const handleError = (error: HttpErrorResponse): Observable<any> => {
   return throwError(() => new Error(`${error.status}`))
 }
 
+const addToken = async (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
+  const tokenProvider = inject(AuthService).token;
+  const token = await tokenProvider
+  if (token) {
+    req = req.clone({
+      headers: req.headers.set('Authorization', `Bearer ${token}`)
+    })
+  }
+  return lastValueFrom(next(req))
+}
+
 const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
   if (req.url.startsWith(domainServiceRoot())) {
-    const token = inject(AuthService).token;
-    if (token) {
-      req = req.clone({
-        headers: req.headers.set('Authorization', `Bearer ${token}`),
-      });
-    }
+    return from(addToken(req, next))
   }
   return next(req)
 }
+
 
 export {domainServiceRoot, handleError, authInterceptor}

@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from '../auth.serivce';
+import {Router} from '@angular/router';
+import {getAuth, getRedirectResult} from '@angular/fire/auth';
 
 @Component({
   selector: 'login',
@@ -8,9 +10,15 @@ import {AuthService} from '../auth.serivce';
   styleUrls: ['login.component.css']
 })
 export class LoginComponent implements OnInit {
-  constructor(private readonly authService: AuthService)  {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly router: Router)  {}
 
-  loginError= false
+  private readonly signInSuccessPath = ''
+
+  protected loginError= false
+
+  protected loading: boolean = true
 
   loginForm = new FormGroup({
     username: new FormControl(null, [Validators.required]),
@@ -18,18 +26,31 @@ export class LoginComponent implements OnInit {
   })
 
   ngOnInit(): void {
-    this.loginForm.valueChanges.subscribe(change => {
+    getRedirectResult(getAuth()).then(userCredential => {
+        this.loading = false
+        this.authService.handleSignInResult(userCredential)
+          .then(signedIn => signedIn && this.router.navigate([this.signInSuccessPath]))
+      }
+    )
+
+    this.loginForm.valueChanges.subscribe(() => {
       this.loginError = false
     })
   }
 
-  login() {
-    this.authService.authenticate(this.username?.getRawValue(), this.password?.getRawValue())
-      .then(() => {
-        this.loginError = false
-    }).catch((error) => {
-        this.loginError = true
-      });
+  async signIn() {
+    const signedIn = await this.authService.signIn(this.username?.getRawValue(), this.password?.getRawValue())
+    if (signedIn) {
+      this.loginError = false
+      return this.router.navigate([this.signInSuccessPath])
+    } else {
+      this.loginError = true
+      return true
+    }
+  }
+
+  signInWithGoogle() {
+    this.authService.signInWithGoogle()
   }
 
   get username() { return this.loginForm.get('username'); }

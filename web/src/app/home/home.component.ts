@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthService} from '../auth.serivce';
-import {Pet} from '../api/api.service';
 import {PetService} from '../pet.service';
+import {takeWhile} from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -12,26 +12,23 @@ import {PetService} from '../pet.service';
 export class HomeComponent implements OnInit {
 
   constructor(
-    public readonly authService: AuthService,
-    public readonly petService: PetService,
+    private readonly authService: AuthService,
+    private readonly petService: PetService,
     private readonly router: Router)  {}
 
-  navToPetPage(pet: Pet) {
-    this.router.navigate(['/pet', pet.id]).then()
-  }
-
   ngOnInit(): void {
-    if (this.authService.user) {
-      this.petService.getOnePetForCurrentUser().subscribe(pet => {
-        if (pet) {
-          this.navToPetPage(pet)
+    this.authService.isLoading
+      .pipe(takeWhile(authIsLoading => authIsLoading, true))
+      .subscribe(authIsLoading => {
+      if (!authIsLoading) {
+        if (this.authService.loggedIn) {
+          this.petService.getOnePetForCurrentUser().subscribe(pet => {
+            this.router.navigate(pet ? ['/pet', pet.id] : ['/addPet']).then()
+          })
+        } else {
+          this.router.navigate(['/login']).then()
         }
-      })
-    }
-  }
-
-  petAdded(pet: Pet) {
-    this.petService.addPetForCurrentUser(pet)
-      .subscribe(pet => this.navToPetPage(pet))
+      }
+    })
   }
 }

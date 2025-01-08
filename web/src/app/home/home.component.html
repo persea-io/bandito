@@ -1,15 +1,9 @@
-@if(!authService.user) {
-  <div class="d-flex justify-content-center">
-    <div class="w-50 p-3">
-      <h1>Welcome to Bandito!</h1>
-      <div class="d-flex flex-column">
-
-        <a class="btn btn-primary mb-3" href="/login" role="button">Login</a>
-        <a class="btn btn-primary" href="/signup" role="button">Signup</a>
+<div class="d-flex justify-content-center">
+    <div class="w-50">
+      <div class="mt-5 text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only"></span>
+        </div>
       </div>
     </div>
-  </div>
-}
-@else {
-  <bandito-edit-pet (onPetUpdated)="petAdded($event)"></bandito-edit-pet>
-}
+</div>

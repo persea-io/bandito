@@ -2,8 +2,6 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {AngularFireModule} from "@angular/fire/compat";
-import {AngularFireAuthModule, USE_EMULATOR as USE_AUTH_EMULATOR} from "@angular/fire/compat/auth";
 import {environment} from "../environments/environment";
 import {LoginComponent} from './login/login.component';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -13,6 +11,9 @@ import {authInterceptor} from './api/api-utils';
 import {HomeComponent} from './home/home.component';
 import {EditPetComponent} from './edit-pet/edit-pet.component';
 import {PetComponent} from './pet/pet.component';
+import {AddPetComponent} from './add-pet/add-pet.component';
+import {connectAuthEmulator, getAuth, provideAuth} from '@angular/fire/auth';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
 
 @NgModule({
   declarations: [
@@ -20,11 +21,10 @@ import {PetComponent} from './pet/pet.component';
     LoginComponent,
     HomeComponent,
     EditPetComponent,
-    PetComponent
+    PetComponent,
+    AddPetComponent
   ],
   imports: [
-    AngularFireAuthModule,
-    AngularFireModule.initializeApp(environment.firebase),
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
@@ -32,11 +32,16 @@ import {PetComponent} from './pet/pet.component';
     NgbTimepickerModule
   ],
   providers: [
-    provideHttpClient(withInterceptors([authInterceptor])),
-    {
-      provide: USE_AUTH_EMULATOR,
-      useValue: environment.useEmulators ? ['http://localhost:9099'] : undefined
-    },
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => {const auth = getAuth();
+      if (environment.useEmulators) {
+        connectAuthEmulator(auth, 'http://localhost:9099', {
+          disableWarnings: true,
+        });
+      }
+      return auth;
+    }),
+    provideHttpClient(withInterceptors([authInterceptor]))
   ],
   bootstrap: [AppComponent]
 })

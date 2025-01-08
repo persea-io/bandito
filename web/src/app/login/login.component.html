@@ -1,31 +1,37 @@
-<div class="d-flex justify-content-center">
-  <div class="w-50 p-3">
-    <h1>Login to Bandito</h1>
-    <form [formGroup]="loginForm" spellcheck="false" >
-      <div class="row mb-3 justify-content-center">
-        <label for="username" class="col-sm-2 col-form-label">Username</label>
-        <div class="col-sm-5">
-          <input type="email" class="form-control" aria-describedby="emailHelp" id="username" formControlName="username">
-        </div>
-      </div>
-      <div class="row mb-3 justify-content-center">
-        <label for="password" class="col-sm-2 col-form-label">Password</label>
-        <div class="col-sm-5">
-          <input type="password" class="form-control" id="password" formControlName="password">
-        </div>
-        <ng-container *ngIf="loginError">
-          <div class="login-error">
-            <div>Invalid Credentials</div>
-            <div>Check your username and password</div>
+@if (!loading) {
+  <div class="d-flex justify-content-center">
+    <div class="w-50 p-3">
+      <h1>Login to Bandito</h1>
+      <form [formGroup]="loginForm" spellcheck="false" >
+        <div class="row mb-3 justify-content-center">
+          <label for="username" class="col-sm-2 col-form-label">Username</label>
+          <div class="col-sm-5">
+            <input type="email" class="form-control" aria-describedby="emailHelp" id="username" formControlName="username">
           </div>
-        </ng-container>
+        </div>
+        <div class="row mb-3 justify-content-center">
+          <label for="password" class="col-sm-2 col-form-label">Password</label>
+          <div class="col-sm-5">
+            <input type="password" class="form-control" id="password" formControlName="password">
+          </div>
+          <ng-container *ngIf="loginError">
+            <div class="login-error">
+              <div>Invalid Credentials</div>
+              <div>Check your username and password</div>
+            </div>
+          </ng-container>
+        </div>
+        <div class="mb-3" >
+          <button type="submit" class="btn btn-primary"
+                  (click)="signIn()"
+                  [disabled]="loginForm.invalid && !loginForm.untouched || loginError">
+            Login
+          </button>
+        </div>
+      </form>
+      <div>
+        <a class="btn btn-secondary" (click)="signInWithGoogle()" role="button">SignIn with Google</a>
       </div>
-      <button type="submit" class="btn btn-primary"
-              (click)="login()"
-              [disabled]="loginForm.invalid && !loginForm.untouched || loginError">
-        Login
-      </button>
-    </form>
+    </div>
   </div>
-</div>
-
+}

@@ -40,10 +40,16 @@ export class EditPetComponent {
 
   addFeedTime() {
     const firstFeedingTime = this.addPetForm.controls.feedTimes.at(0)
+    let hour = firstFeedingTime.value?.hour ?? 0
+    if (hour < 12) {
+      hour += 12
+    } else if (hour < 23) {
+      hour += 1
+    }
     const newTime = {
-      hour: firstFeedingTime.value!.hour + 1,
+      hour: hour,
       minute: firstFeedingTime.value!.minute,
-      second: firstFeedingTime.value!.second
+      second: 0
     }
     this.addPetForm.controls.feedTimes.insert(1, new FormControl(newTime, this.validateFeedTimes))
     this.twoFeedingTimes = true

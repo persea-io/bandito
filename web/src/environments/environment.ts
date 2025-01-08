@@ -1,13 +1,13 @@
 export const environment = {
   apiUrl: 'api/v1',
   firebase: {
-    apiKey: "AIzaSyCZXgUbi5zUs6zPzwyuReJmXwWx30hXtd4",
-    authDomain: "bandito-dev.firebaseapp.com",
-    projectId: "bandito-dev",
-    storageBucket: "bandito-dev.firebasestorage.app",
-    messagingSenderId: "58908296360",
-    appId: "1:58908296360:web:aaf5f239b14a026d6b2e9d",
-    measurementId: "G-F27GW0KLKC"
+    apiKey: "AIzaSyAGll83xqZUdnrOIuMvjbG1IJQY2T4rXqE",
+    authDomain: "bandito-2.firebaseapp.com",
+    projectId: "bandito-2",
+    storageBucket: "bandito-2.firebasestorage.app",
+    messagingSenderId: "347248900446",
+    appId: "1:347248900446:web:346c82145d63b4295237cf",
+    measurementId: "G-BP5H726WJH"
   },
   useEmulators: false
 };

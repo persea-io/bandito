@@ -24,14 +24,7 @@ export class PetService {
   }
 
   // Evaluate a feeding time based on the current time
-  private evalFeedTime(feedTime: Time): NextFeeding {
-    const nowDate = new Date()
-    const now: Time = {
-      hour: nowDate.getHours(),
-      minute: nowDate.getMinutes(),
-    }
-
-    // Does not to be fed yet
+  private evalFeedTime(feedTime: Time, now: Time): NextFeeding {
     if (this.before(now, feedTime)) {
       return { nextFeedingTime: feedTime}
     }
@@ -41,8 +34,31 @@ export class PetService {
 
   // Determine the next feeding time and day
   evalNextFeeding(pet: Pet): NextFeeding {
+    const nowDate = new Date()
+    const now: Time = {
+      hour: nowDate.getHours(),
+      minute: nowDate.getMinutes(),
+    }
 
     const events = pet.events ?? []
+
+    if (!events.length) {
+      // New pet registration, ignore feeding time if it already happened today
+      // so that it doesn't evaluate to missed
+      if (pet.feedTimes.length == 2) {
+        if (this.before(now, pet.feedTimes[0])) {
+          return { nextFeedingTime: pet.feedTimes[0] }
+        }
+        if (this.before(now, pet.feedTimes[1])) {
+          return { nextFeedingTime: pet.feedTimes[1] }
+        }
+        return { nextFeedingTime: pet.feedTimes[0], nextIsTomorrow: true }
+      }
+      if (this.before(now, pet.feedTimes[0])) {
+        return { nextFeedingTime: pet.feedTimes[0] }
+      }
+      return { nextFeedingTime: pet.feedTimes[0], nextIsTomorrow: true }
+    }
 
     // Get the events that happened today
     const todayEvents = events.filter(e => new Date(e.timestamp) > endOfYesterday())
@@ -53,9 +69,9 @@ export class PetService {
         case 2:
           return {nextFeedingTime: pet.feedTimes[0], nextIsTomorrow: true}
         case 1:
-          return this.evalFeedTime(pet.feedTimes[1])
+          return this.evalFeedTime(pet.feedTimes[1], now)
         default:
-          return this.evalFeedTime(pet.feedTimes[0])
+          return this.evalFeedTime(pet.feedTimes[0], now)
       }
     }
 
@@ -63,12 +79,8 @@ export class PetService {
     if (todayEvents.length > 0) {
       return {nextFeedingTime: pet.feedTimes[0], nextIsTomorrow: true}
     } else {
-      return this.evalFeedTime(pet.feedTimes[0])
+      return this.evalFeedTime(pet.feedTimes[0], now)
     }
-  }
-
-  private currentUser(): string {
-    return this.authService.user!.id
   }
 
   getOnePetForCurrentUser(): Observable<Pet | undefined> {
@@ -77,7 +89,7 @@ export class PetService {
   }
 
   getAllPetsForCurrentUser(): Observable<Pet[]> {
-    return this.getPets(this.currentUser()).pipe(first())
+    return this.getPets(this.authService.userId).pipe(first())
   }
 
   getPets(ownerId: string): Observable<Pet[]> {
@@ -85,7 +97,7 @@ export class PetService {
   }
 
   addPetForCurrentUser(pet: Pet): Observable<Pet> {
-    return this.apiService.addPet(this.currentUser(), pet).pipe(first())
+    return this.apiService.addPet(this.authService.userId, pet).pipe(first())
   }
 
   getPet(petId: string, events: boolean = false): Observable<Pet> {

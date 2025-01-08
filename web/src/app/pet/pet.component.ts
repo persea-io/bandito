@@ -4,6 +4,7 @@ import {NextFeeding, PetService} from '../pet.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subject, switchMap, takeUntil, timer} from 'rxjs';
 import {isYesterday} from 'date-fns';
+import {AuthService} from '../auth.serivce';
 
 
 @Component({
@@ -22,9 +23,10 @@ export class PetComponent implements OnInit, OnDestroy {
   private stopPolling = new Subject<void>()
 
   constructor(
-    public readonly petService: PetService,
+    private readonly petService: PetService,
     private readonly router: Router,
-    private readonly route: ActivatedRoute) {
+    private readonly route: ActivatedRoute,
+    protected readonly authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -83,6 +85,12 @@ export class PetComponent implements OnInit, OnDestroy {
     if (this.pet?.id) {
       this.petService.feed(this.pet.id).subscribe(pet => this.updatePet(pet))
     }
+  }
+
+  protected signOut() {
+    this.authService.signOut().then(() => {
+      this.router.navigate(['']).then()
+    })
   }
 
   protected readonly isYesterday = isYesterday;
