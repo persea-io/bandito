@@ -3,7 +3,7 @@ export const environment = {
   firebase: {
     apiKey: "emulator",
     authDomain: "emulator.com",
-    projectId: "bandito-2",
+    projectId: "bandito",
     appId: "emulator",
   },
   useEmulators: true

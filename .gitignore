@@ -6,3 +6,4 @@ data.txt
 *.log
 
 /.firebase/
+.firebaserc
